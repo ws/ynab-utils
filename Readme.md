@@ -7,3 +7,4 @@ I'm open sourcing this just in case some other pour soul also happens to both ha
 - endpoint to get transactions by flag color
 - filter transaction endpoint by memo text server-side
 - ability to fetch/update subtransactions by id (ideally using the existing transaction endpoint)
+- endpoint to update accounts (specifically account names)
