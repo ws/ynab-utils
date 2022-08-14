@@ -11,3 +11,12 @@ export const renderUSD = (milliunits) => {
   }
   return chalk.green(`+${formatter.format(units)}`);
 };
+
+// parse a X-Rate-Limit response
+// todo: run it through a regex before assuming it's in the correct shape
+// https://api.youneedabudget.com/#rate-limiting
+export const remainingRateLimitCalls = (rateLimit) => {
+  const used = parseInt(rateLimit.split("/")[0]);
+  const remaining = parseInt(rateLimit.split("/")[1]);
+  return remaining - used;
+};

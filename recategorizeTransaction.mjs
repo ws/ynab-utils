@@ -7,7 +7,7 @@
 
 import dotenv from "dotenv";
 import { API } from "ynab";
-import { renderUSD } from "./util.mjs";
+import { renderUSD, remainingRateLimitCalls } from "./util.mjs";
 
 dotenv.config();
 
@@ -17,23 +17,30 @@ dotenv.config();
 // --transactionIds arg is required (comma separated)
 
 const { ACCESS_TOKEN, BUDGET_ID } = process.env;
-const { categoryId } = argv;
-const transactionIds = argv.transactionIds ? argv.transactionIds.split(",") : argv.transactionId ? [argv.transactionId] : [];
+let { categoryId } = argv;
+let transactionIds = argv.transactionIds ? argv.transactionIds.split(",") : argv.transactionId ? [argv.transactionId] : [];
 
 if (!ACCESS_TOKEN || !BUDGET_ID) throw new Error("Missing ENV variables");
-if (!categoryId || !transactionIds || transactionIds.length < 1) throw new Error("Missing arguments");
+
+if (!categoryId) categoryId = await question("Category ID: ");
+if (!transactionIds || transactionIds.length < 1) transactionIds = [await question("Transaction ID: ")];
 
 const ynab = new API(ACCESS_TOKEN);
 
 transactionIds.map(async (tId) => {
   // if any YNAB devs are reading this please add an endpoint to fetch multiple transactions by ID <3
-  const {
-    data: { transaction }
-  } = await ynab.transactions.getTransactionById(BUDGET_ID, tId);
+  const { data, rateLimit } = await ynab.transactions.getTransactionById(BUDGET_ID, tId);
+  const { transaction } = data;
 
   if (transaction.category_id === categoryId) {
     console.log(`Skipping transaction ${transaction.id}, already in the correct category`);
     return;
+  }
+
+  if (remainingRateLimitCalls(rateLimit) <= 5) {
+    throw new Error("Out of rate limit calls for this hour, bailing before we get into a weird partial update state. Try again later");
+  } else {
+    console.log(`Rate limit status: used ${rateLimit} this hour`);
   }
 
   const month = transaction.date;
