@@ -8,3 +8,5 @@ I'm open sourcing this just in case some other pour soul also happens to both ha
 - filter transaction endpoint by memo text server-side
 - ability to fetch/update subtransactions by id (ideally using the existing transaction endpoint)
 - endpoint to update accounts (specifically account names)
+- let me filter the category endpoint by status (eg give me a way to exclude deleted/hidden categories)
+- add a description of DEBT to the goal_type enum docs
