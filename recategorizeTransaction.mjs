@@ -7,7 +7,8 @@
 
 import dotenv from "dotenv";
 import { API } from "ynab";
-import { renderUSD, remainingRateLimitCalls } from "./util.mjs";
+import { argv, question } from "zx";
+import { renderUSD, remainingRateLimitCalls, confirm } from "./util.mjs";
 
 dotenv.config();
 
@@ -57,9 +58,9 @@ transactionIds.map(async (tId) => {
   console.log(`Transaction: ${chalk.yellow(transaction.date)} ${transaction.memo} [${transaction.account_name}]`);
   console.log(`Category: ${oldCategory.name} (${renderUSD(transaction.amount)}) -> ${newCategory.name} (${renderUSD(-transaction.amount)})`); // note amount is negative
 
-  const c = await question("Execute? (y/n) ");
-  if (!["y", "Y", "yes"].includes(c)) {
-    console.log("SKIPPING");
+  const shouldContinue = await confirm("Execute?");
+  if (!shouldContinue) {
+    console.log("Skipping...");
     return;
   }
 

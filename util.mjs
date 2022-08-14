@@ -1,3 +1,5 @@
+import { question } from "zx";
+
 export const renderUSD = (milliunits) => {
   const units = milliunits / 1000;
 
@@ -20,4 +22,9 @@ export const remainingRateLimitCalls = (rateLimit) => {
   const used = parseInt(m[1]);
   const remaining = parseInt(m[2]);
   return remaining - used;
+};
+
+export const confirm = async (prompt) => {
+  const c = await question(`${prompt} (y/n) `, { choices: ["y", "n"] });
+  return ["y", "yes"].includes((c || "").trim().toLowerCase());
 };
