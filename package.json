@@ -1,0 +1,8 @@
+{
+    "type": "module",
+    "dependencies": {
+        "dotenv": "^16.0.1",
+        "ynab": "^1.28.0",
+        "zx": "^7.0.8"
+    }
+}
