@@ -13,10 +13,11 @@ export const renderUSD = (milliunits) => {
 };
 
 // parse a X-Rate-Limit response
-// todo: run it through a regex before assuming it's in the correct shape
 // https://api.youneedabudget.com/#rate-limiting
 export const remainingRateLimitCalls = (rateLimit) => {
-  const used = parseInt(rateLimit.split("/")[0]);
-  const remaining = parseInt(rateLimit.split("/")[1]);
+  const m = rateLimit.match(/([0-9]{1,3})\/([0-9]{1,3})/);
+  if (!m) return 0;
+  const used = parseInt(m[1]);
+  const remaining = parseInt(m[2]);
   return remaining - used;
 };
