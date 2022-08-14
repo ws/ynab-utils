@@ -21,8 +21,7 @@ const categories = {};
 
 // https://twitter.com/dan_abramov/status/1338253118199508992
 categoryGroups.map((group) => {
-	(group.categories || []).map((c) => (categories[c.id] = { name: c.name, group: group.name }));
+  (group.categories || []).map((c) => (categories[c.id] = { name: c.name, group: group.name }));
 });
 
 console.table(categories);
-
